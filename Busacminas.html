@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+    <head>
+        <title>Buscaminas</title>
+        <meta charset="utf-8">
+        <style>
+            body{
+                
+            }
+            #tablero tr td.error{
+                border: black solid 2px;
+                padding: 30px;
+                background-color: white;
+            }
+            #tablero{
+                border: black solid 1px;
+                border-collapse: separate;
+                background-color: aqua;
+                
+                
+                
+                empty-cells: show;
+            }
+            #tablero tr td{
+                border: black solid 2px;
+                padding: 30px;
+                background-color: grey
+            }
+            #tablero tr td.vacio:hover{
+                border: black solid 2px;
+                padding: 30px;
+                background-color: darkgray
+            }
+            #tablero tr td.bomba{
+                border: black solid 2px;
+                padding: 30px;
+                background-color: red;
+            }
+            #encabezado{
+                background-color: blue;
+                color: lightblue;
+                margin-bottom: 5px;
+            ;
+
+            }
+            #encabezado tr td{
+                background-color: blue;
+                color: lightblue;
+                padding-top: 5px;
+                margin: 5px;
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            #encabezado tr td:hover{
+                background-color: black;
+                color: lightblue;
+                
+            }
+           
+            #bomba{
+                background-color: red;
+            }
+            #start{
+                cursor: pointer;
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <div id="div">
+            <table align="center" id="encabezado" >
+                <tr>
+                    <td id="resetearTabla">Reiniciar</td>
+                    <td >Bombas elegidas</td>
+                    <td id="bombasRestantes">0</td>
+                    <td id="tiempo">00:00</td>
+                    <td id="start">Start</td>
+                </tr>
+            </table> 
+            <table align="center" id="tablero"></table>
+        </div>
+        <table id="test1"></table>
+        <br>
+        <table id="test2"></table>
+        <br>
+        <table id="test3"></table>
+        <br>
+        <table id="test4"></table>
+
+        
+            <script src="Buscaminas.js"></script>
+    </body>
