@@ -2,6 +2,8 @@ let alto=10;
 let ancho=10;
 let bombas=15;
 let bombasPintadas=0;
+let matrizFinal
+let bombasUser=15
 
 window.addEventListener("load",inicio)
 
@@ -34,33 +36,115 @@ function pintarTablaRellena(){
     for(let i=1; i<ancho+1;i++){
         pintarTabla+="<tr>"
         for(let j=1;j<alto+1;j++){
-            let onClick= 'onclick="mostrar('+i+','+j+')"';
+
             let id='id="'+i+'-'+j+'"'
+            let onClick='onclick="desvelar('+i+','+j+')"'
+            let oncontextmenu= "oncontextmenu='ponerBandera("+i+','+j+")'"
             if(matrizRellena[i][j]=='x'){  
                 bombasPintadas++;
-                pintarTabla+="<td  class='bomba' "+onClick+id+"></td>";
+                pintarTabla+="<td "+id+" class='bomba' align='center' "+oncontextmenu+" "+onClick+">&nbsp</td>";
             }else if(matrizRellena[i][j]=='borde'){
-                pintarTabla+="<td class='error'>"+matrizRellena[i][j]+"</td>";
+                pintarTabla+="<td "+id+" class='error' align='center'>&nbsp</td>";
             }
             else{
                
-                pintarTabla+="<td class='vacio'"+onClick+id+"></td>";
+                pintarTabla+="<td "+id+" class='vacio' align='center'"+oncontextmenu+" "+onClick+">&nbsp</td>";
             }
         }
         pintarTabla+="</tr>"
     }
     tabla.innerHTML= pintarTabla
     bombas=15;
-    cambiarBombasPintadas(bombasPintadas)    
+    matrizFinal=matrizRellena
+    
 }
 
-function cambiarBombasPintadas(bombasPintadas){
+function ponerBandera(i,j){
+    
+    document.getElementById(i+'-'+j).innerText='🚩'
+    
+    
+    return false
 
 }
+
+
 
 function desvelar(i,j){
-    document.getElementById()
+    
+    if (matrizFinal[i][j]!='x'){
+        if(matrizFinal[i][j]==0){
+            desvelarCeros(matrizFinal,i,j)
+        }else if(matrizFinal[i][j]==1){
+            document.getElementById(i+'-'+j).innerText=matrizFinal[i][j]
+            document.getElementById(i+'-'+j).setAttribute('style',"color: blue;",)
+        }else if(matrizFinal[i][j]==2){
+            document.getElementById(i+'-'+j).innerText=matrizFinal[i][j]
+            document.getElementById(i+'-'+j).setAttribute('style',"color: green;",)
+        }else if(matrizFinal[i][j]==3){
+            document.getElementById(i+'-'+j).innerText=matrizFinal[i][j]
+            document.getElementById(i+'-'+j).setAttribute('style',"color: red;",)
+        }
+        
+        
+        
+        else{
+            document.getElementById(i+'-'+j).innerText=matrizFinal[i][j]
+        }
+        
+        
+    }else{//pierde y enseña todo el tablero
+        alert('Bomba')
+        let tabla= document.getElementById('tablero');
+        let pintarTabla="";
+        for(let i=1; i<ancho+1;i++){
+            pintarTabla+="<tr>"
+            for(let j=1;j<alto+1;j++){
+    
+                let id='id="'+i+'-'+j+'"'
+                let onClick='onclick="desvelar('+i+','+j+')"'
+                if(matrizFinal[i][j]=='x'){  
+                    bombasPintadas++;
+                    pintarTabla+="<td "+id+" class='bomba' "+onClick+" >x</td>";
+                }else if(matrizFinal[i][j]=='borde'){
+                    pintarTabla+="<td "+id+" class='error'>"+matrizFinal[i][j]+"</td>";
+                }
+                else{
+                   
+                    pintarTabla+="<td "+id+" class='vacio' "+onClick+">"+matrizFinal[i][j]+"</td>";
+                }
+            }
+            pintarTabla+="</tr>"
+        }
+        tabla.innerHTML= pintarTabla
+    }
 
+}//desvelar
+
+function desvelarCeros(matrizADesvelar, i,j){
+    
+    i= Number(i)
+    j=Number(j)
+    
+    document.getElementById(i+'-'+j).innerText=matrizADesvelar[i][j];
+    if(matrizADesvelar[i][j]==0){
+        
+            
+        if(matrizADesvelar[i-1][j-1]=='0')desvelarCeros(matrizADesvelar,i-1,j-1)
+        if(matrizADesvelar[i-1][j]=='0') desvelarCeros(matrizADesvelar,i-1,j)
+        if(matrizADesvelar[i-1][j+1]=='0') desvelarCeros(matrizADesvelar,i-1,j+1)
+    
+        if(matrizADesvelar[i][j-1]=='0') desvelarCeros(matrizADesvelar,i,j-1)
+        if(matrizADesvelar[i][j+1]=='0') desvelarCeros(matrizADesvelar,i,j+1)
+
+        if(matrizADesvelar[i+1][j-1]=='0') desvelarCeros(matrizADesvelar,i+1,j-1)
+        if(matrizADesvelar[i+1][j]=='0') desvelarCeros(matrizADesvelar,i+1,j)
+        if(matrizADesvelar[i+1][j+1]=='0') desvelarCeros(matrizADesvelar,i+1,j+1)
+    
+
+
+    }
+    
 
 }
 
@@ -77,13 +161,10 @@ function generarBombas(){
    
     let matrizConBomba= new Array(ancho+2)
 
-    let bombasUser=Number(prompt('Introduca el numero de bombas deseado','15'))
-    alert(bombasUser)
-    alert(bombasPintadas)
-    alert(!Number(bombasUser)==Number(bombasPintadas))
+    bombasUser=Number(prompt('Introduca el numero de bombas deseado','15'))
 
-    while(!bombasUser==bombasPintadas){
-        alert('bombas'+bombas+'          bombasUser  '+bombasUser)
+
+    
         bombasPintadas=0
                 //iniciamos matriz con 2 de alto y ancho adicional 
         for(let i=0;i<matrizConBomba.length;i++){
@@ -95,39 +176,46 @@ function generarBombas(){
         }
         pintar(matrizConBomba,'test3')
             //recorremos excepto los bordes y ponemos bombas
-        for(let i=1;i<matrizConBomba.length-1;i++){
-            
-            for (let j=1;j<matrizConBomba[i].length-1;j++){
-                if(ponerBomba()){
-                    matrizConBomba[i][j]='x';
-                    bombas--;
-                    bombasPintadas++
-                }
 
-                else matrizConBomba[i][j]='_';
+        while(Number(bombasUser)!=Number(bombasPintadas)){
+            bombas=bombasUser
+            bombasPintadas=0;
+            for(let i=1;i<matrizConBomba.length-1;i++){
+                
+                for (let j=1;j<matrizConBomba[i].length-1;j++){
+                    if(ponerBomba()){
+                        matrizConBomba[i][j]='x';
+                        bombas--;
+                        bombasPintadas++;
+                    }
+
+                    else matrizConBomba[i][j]='_';
+                }
             }
+            bombas=bombasUser
+            console.log('Matriz con bomba : '+matrizConBomba)
+        
+            console.log(Number(bombasUser)!=Number(bombasPintadas))
         }
-        bombas=bombasUser
-        console.log('Matriz con bomba : '+matrizConBomba)
-    }
     
    
     pintar(matrizConBomba,'test1')
-    let matrizAvabado=generarMatriz(matrizConBomba)
+    let matrizAcabado=generarMatriz(matrizConBomba)
     //
-    console.log(matrizAvabado)
+    console.log(matrizAcabado)
     console.log('return')
-    return matrizAvabado;
+    pintar(matrizAcabado,'test2')
+    return matrizAcabado;
 }
 
 
 function ponerBomba(){
-    let Probabilidad= (ancho*alto)/10
+    let Probabilidad= (ancho*alto)/bombasUser*13
+    if(Probabilidad>90) Probabilidad=99
     let random=(Math.ceil(Math.random()*100))
     if(bombas!=0){
         
-        if(random<Probabilidad){
-            bombas--
+        if(random>Probabilidad){
             return true;
         }
         
@@ -147,13 +235,6 @@ function generarMatriz(matriz){
         
         for (let j=1;j<maxJ-1;j++){
                 matriz[i][j]=comprobarAlrededores(matriz,i,j)
-                
-            
-
-            
-
-
-
         }
     }
 
