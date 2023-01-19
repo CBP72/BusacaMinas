@@ -4,13 +4,22 @@ let bombas=15;
 let bombasPintadas=0;
 let matrizFinal
 let bombasUser=15
+let modo=1
+let winCondition
 
 window.addEventListener("load",inicio)
 
 function inicio(){
     pintarTablaVacia()
     document.getElementById('start').addEventListener('click',pintarTablaRellena)
-    document.getElementById('resetearTabla').addEventListener('click',pintarTablaVacia)
+    document.getElementById('resetearTabla').addEventListener('click',pintarTablaRellena)
+    document.getElementById('cambiarSize').addEventListener('click',cambiarSize)
+}
+
+function cambiarSize(){
+    ancho=Number(prompt('Dime el tamaño del lado','15'))
+    alto=ancho
+    pintarTablaRellena()
 }
 
 
@@ -22,7 +31,7 @@ function pintarTablaVacia(){
     for(let i=0; i<alto;i++){
         pintarTabla+="<tr>"
         for(let j=0;j<ancho;j++){
-            pintarTabla+="<td class='vacio'> </td>";
+            pintarTabla+="<td class='vacio'> 💣</td>";
         }
         pintarTabla+="</tr>"
     }
@@ -56,12 +65,18 @@ function pintarTablaRellena(){
     tabla.innerHTML= pintarTabla
     bombas=15;
     matrizFinal=matrizRellena
+    winCondition=ancho*alto-bombasUser
     
 }
 
 function ponerBandera(i,j){
-    
-    document.getElementById(i+'-'+j).innerText='🚩'
+
+   if(document.getElementById(i+'-'+j).textContent!='🚩')
+        document.getElementById(i+'-'+j).innerText='🚩'
+        else{
+            document.getElementById(i+'-'+j).innerText=''
+        }
+        
     
     
     return false
@@ -78,48 +93,68 @@ function desvelar(i,j){
         }else if(matrizFinal[i][j]==1){
             document.getElementById(i+'-'+j).innerText=matrizFinal[i][j]
             document.getElementById(i+'-'+j).setAttribute('style',"color: blue;",)
+            document.getElementById(i+'-'+j).setAttribute('class','visitado')
         }else if(matrizFinal[i][j]==2){
             document.getElementById(i+'-'+j).innerText=matrizFinal[i][j]
             document.getElementById(i+'-'+j).setAttribute('style',"color: green;",)
+            document.getElementById(i+'-'+j).setAttribute('class','visitado')
         }else if(matrizFinal[i][j]==3){
             document.getElementById(i+'-'+j).innerText=matrizFinal[i][j]
             document.getElementById(i+'-'+j).setAttribute('style',"color: red;",)
+            document.getElementById(i+'-'+j).setAttribute('class','visitado')
+        }else if(matrizFinal[i][j]==4){
+            document.getElementById(i+'-'+j).innerText=matrizFinal[i][j]
+            document.getElementById(i+'-'+j).setAttribute('style',"color: purple;",)
+            document.getElementById(i+'-'+j).setAttribute('class','visitado')
         }
         
         
         
         else{
             document.getElementById(i+'-'+j).innerText=matrizFinal[i][j]
+            document.getElementById(i+'-'+j).setAttribute('class','visitado')
+        }
+
+        if(document.getElementsByClassName('visitado').length==winCondition){
+            alert('Has ganado WoW')
+            mostrarTodo()
         }
         
         
     }else{//pierde y enseña todo el tablero
         alert('Bomba')
-        let tabla= document.getElementById('tablero');
-        let pintarTabla="";
-        for(let i=1; i<ancho+1;i++){
-            pintarTabla+="<tr>"
-            for(let j=1;j<alto+1;j++){
-    
-                let id='id="'+i+'-'+j+'"'
-                let onClick='onclick="desvelar('+i+','+j+')"'
-                if(matrizFinal[i][j]=='x'){  
-                    bombasPintadas++;
-                    pintarTabla+="<td "+id+" class='bomba' "+onClick+" >x</td>";
-                }else if(matrizFinal[i][j]=='borde'){
-                    pintarTabla+="<td "+id+" class='error'>"+matrizFinal[i][j]+"</td>";
-                }
-                else{
-                   
-                    pintarTabla+="<td "+id+" class='vacio' "+onClick+">"+matrizFinal[i][j]+"</td>";
-                }
-            }
-            pintarTabla+="</tr>"
-        }
-        tabla.innerHTML= pintarTabla
+        mostrarTodo()
+       
     }
 
 }//desvelar
+
+
+function mostrarTodo(){
+    let tabla= document.getElementById('tablero');
+    let pintarTabla="";
+    for(let i=1; i<ancho+1;i++){
+        pintarTabla+="<tr>"
+        for(let j=1;j<alto+1;j++){
+
+            let id='id="'+i+'-'+j+'"'
+            
+            if(matrizFinal[i][j]=='x'){  
+                bombasPintadas++;
+                pintarTabla+="<td "+id+" class='explotada' align='center' >💣</td>";
+            }else if(matrizFinal[i][j]=='borde'){
+                pintarTabla+="<td "+id+" class='error' align='center' >"+matrizFinal[i][j]+"</td>";
+            }
+            else{
+               
+                pintarTabla+="<td "+id+" class='visitado' align='center'>"+matrizFinal[i][j]+"</td>";
+            }
+        }
+        pintarTabla+="</tr>"
+    }
+    tabla.innerHTML= pintarTabla
+
+}
 
 function desvelarCeros(matrizADesvelar, i,j){
     
@@ -127,7 +162,8 @@ function desvelarCeros(matrizADesvelar, i,j){
     j=Number(j)
     
     document.getElementById(i+'-'+j).innerText=matrizADesvelar[i][j];
-    if(matrizADesvelar[i][j]==0){
+    document.getElementById(i+'-'+j).setAttribute('class','visitado')
+    if(matrizADesvelar[i][j]!='x'){
         
             
         if(matrizADesvelar[i-1][j-1]=='0')desvelarCeros(matrizADesvelar,i-1,j-1)
@@ -160,9 +196,9 @@ function desvelarCeros(matrizADesvelar, i,j){
 function generarBombas(){
    
     let matrizConBomba= new Array(ancho+2)
-
-    bombasUser=Number(prompt('Introduca el numero de bombas deseado','15'))
-
+    do{
+        bombasUser=Number(prompt('Introduca el numero de bombas deseado','15'))
+        }while(bombasUser>ancho*alto)
 
     
         bombasPintadas=0
