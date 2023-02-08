@@ -6,6 +6,7 @@ let matrizFinal
 let bombasUser=15
 let modo=1
 let winCondition
+let tiempo=0;
 
 window.addEventListener("load",inicio)
 
@@ -66,6 +67,7 @@ function pintarTablaRellena(){
     bombas=15;
     matrizFinal=matrizRellena
     winCondition=ancho*alto-bombasUser
+    setInterval(pintarTiempo,1000)
     
 }
 
@@ -160,8 +162,10 @@ function desvelarCeros(matrizADesvelar, i,j){
     
     i= Number(i)
     j=Number(j)
+    if(matrizADesvelar[i][j]!=0){
+        document.getElementById(i+'-'+j).innerText=matrizADesvelar[i][j]
+    }
     
-    document.getElementById(i+'-'+j).innerText=matrizADesvelar[i][j];
     document.getElementById(i+'-'+j).setAttribute('class','visitado')
     if(matrizADesvelar[i][j]!='x'){
         
@@ -183,6 +187,7 @@ function desvelarCeros(matrizADesvelar, i,j){
     
 
 }
+
 
 
 
@@ -319,5 +324,8 @@ function pintar(matrizTest,id){
     document.getElementById(id).innerHTML=salida;
 }
 
-
+function pintarTiempo(){
+    tiempo++
+    document.getElementById('tiempo').innerText=tiempo
+}
 
