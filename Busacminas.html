@@ -4,12 +4,13 @@
         <meta charset="utf-8">
         <style>
             body{
-                font-family: Georgia, 'Times New Roman', Times, serif;
-                font-size: large;
+                font-family:  'Times New Roman';
+                background-color: aqua;
+                font-size: 20px;
                 
             }
             #tablero tr td.visitado{
-                background-color: yellow;
+                background-color: white;
             }
             #tablero tr td.error{
                 border: black solid 2px;
@@ -20,6 +21,7 @@
                 border: black solid 1px;
                 border-collapse: separate;
                 background-color: aqua;
+                cursor: pointer;
                 
                 
                 
@@ -27,77 +29,91 @@
             }
             #tablero tr td{
                 border: black solid 2px;
-                width: 30px;
-                height: 30px;
-                max-width: 30px;
-                max-height: 30px;
-                padding: 30px;
+                width: 25px;
+                height:  25px;
+                max-width:  25px;
+                max-height:  25px;
+                padding:  25px;
                 background-color: lightgreen
             }
             #tablero tr td.vacio:hover{
                 border: black solid 2px;
-                width: 30px;
-                height: 30px;
-                max-width: 30px;
-                max-height: 30px;
-                padding: 30px;
+                width: 25px;
+                height:  25px;
+                max-width:  25px;
+                max-height:  25px;
+                padding:  25px;
                 background-color: darkgray
             }
             #tablero tr td.bomba{
                 border: black solid 2px;
-                width: 30px;
-                height: 30px;
-                max-width: 30px;
-                max-height: 30px;
-                padding: 30px;
+                width: 25px;
+                height:  25px;
+                max-width:  25px;
+                max-height:  25px;
+                padding:  25px;
                 background-color: lightgreen;
             }
             #tablero tr td.bomba:hover{
                 border: black solid 2px;
-                width: 30px;
-                height: 30px;
-                max-width: 30px;
-                max-height: 30px;
-                padding: 30px;
+                width: 25px;
+                height:  25px;
+                max-width:  25px;
+                max-height:  25px;
+                padding:  25px;
                 background-color: gray;
             }
             #tablero tr td.explotada{
                 border: black solid 2px;
-                width: 30px;
-                height: 30px;
-                max-width: 30px;
-                max-height: 30px;
-                padding: 30px;
+                width: 25px;
+                height:  25px;
+                max-width:  25px;
+                max-height:  25px;
+                padding:  25px;
                 background-color: orange;
             }
             #encabezado{
                 background-color: grey;
                 color: lightblue;
                 margin-bottom: 5px;
+                cursor: default;
             
 
             }
             #encabezado tr td{
-                background-color: blue;
-                color: lightblue;
+                background-color: darkgray;
+                color: black;
                 padding-top: 5px;
                 margin: 5px;
                 padding-left: 20px;
                 padding-right: 20px;
+               
+
             }
 
-            #encabezado tr td:hover{
-                background-color: black;
-                color: lightblue;
-                
-            }
+           
            
             
             #start{
                 cursor: pointer;
             }
+            #start:hover{
+                background-color: black;
+                color: lightblue;
+            }
             #resetearTabla{
                 cursor: pointer;
+            }
+            #resetearTabla:hover{
+                background-color: black;
+                color: lightblue;
+            }
+            #cambiarSize{
+                cursor: pointer;
+            }
+            #cambiarSize:hover{
+                background-color: black;
+                color: lightblue;
             }
 
 
@@ -110,20 +126,20 @@
                     <td id="resetearTabla">Reiniciar</td>
                     <td id="cambiarSize">Cambiar tamaño</td>
                     <td id="bombasRestantes">0</td>
-                    <td id="tiempo">00:00</td>
+                    <td id="tiempo">0</td>
                     <td id="start">Start</td>
                 </tr>
             </table> 
-            <p style="color: red;">hs</p>
+            
             <table align="center" id="tablero" oncontextmenu="javascript:return false"></table>
         </div>
-        <table id="test1" ></table>
+        <table id="test1" hidden></table>
         <br>
-        <table id="test2"></table>
+        <table id="test2" hidden></table>
         <br>
-        <table id="test3"></table>
+        <table id="test3" hidden></table>
         <br>
-        <table id="test4"></table>
+        <table id="test4" hidden></table>
 
         
             <script src="Buscaminas.js"></script>
