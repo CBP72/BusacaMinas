@@ -6,7 +6,9 @@ let matrizFinal
 let bombasUser=15
 let modo=1
 let winCondition
-let tiempo=0;
+let contador=0;
+let tiempoTranscurrido
+
 
 window.addEventListener("load",inicio)
 
@@ -15,10 +17,12 @@ function inicio(){
     document.getElementById('start').addEventListener('click',pintarTablaRellena)
     document.getElementById('resetearTabla').addEventListener('click',pintarTablaRellena)
     document.getElementById('cambiarSize').addEventListener('click',cambiarSize)
+    tiempoTranscurrido= document.getElementById('tiempo')
+
 }
 
 function cambiarSize(){
-    ancho=Number(prompt('Dime el tamaño del lado','15'))
+    ancho=Number(prompt('Dime el tamaño del lado','10'))
     alto=ancho
     pintarTablaRellena()
 }
@@ -67,7 +71,8 @@ function pintarTablaRellena(){
     bombas=15;
     matrizFinal=matrizRellena
     winCondition=ancho*alto-bombasUser
-    setInterval(pintarTiempo,1000)
+    iniciarContador()
+   
     
 }
 
@@ -88,10 +93,15 @@ function ponerBandera(i,j){
 
 
 function desvelar(i,j){
+
+    try{
+    pintar(matrizFinal,'test1')
+
+    
     
     if (matrizFinal[i][j]!='x'){
         if(matrizFinal[i][j]==0){
-            desvelarCeros(matrizFinal,i,j)
+            despejarCeros(i,j)
         }else if(matrizFinal[i][j]==1){
             document.getElementById(i+'-'+j).innerText=matrizFinal[i][j]
             document.getElementById(i+'-'+j).setAttribute('style',"color: blue;",)
@@ -115,18 +125,28 @@ function desvelar(i,j){
         else{
             document.getElementById(i+'-'+j).innerText=matrizFinal[i][j]
             document.getElementById(i+'-'+j).setAttribute('class','visitado')
+            
         }
 
         if(document.getElementsByClassName('visitado').length==winCondition){
             alert('Has ganado WoW')
+            winCondition=0
+            
+            pararContador()
             mostrarTodo()
         }
         
         
     }else{//pierde y enseña todo el tablero
         alert('Bomba')
+        pararContador()
         mostrarTodo()
+        
+        
        
+    }
+    }catch(error){
+        console.log('toda va bien')
     }
 
 }//desvelar
@@ -146,8 +166,10 @@ function mostrarTodo(){
                 pintarTabla+="<td "+id+" class='explotada' align='center' >💣</td>";
             }else if(matrizFinal[i][j]=='borde'){
                 pintarTabla+="<td "+id+" class='error' align='center' >"+matrizFinal[i][j]+"</td>";
-            }
-            else{
+            }else if(matrizFinal[i][j]=='0'||matrizFinal[i][j]==0){
+                pintarTabla+="<td "+id+" class='visitado' align='center'></td>";
+
+            }else{
                
                 pintarTabla+="<td "+id+" class='visitado' align='center'>"+matrizFinal[i][j]+"</td>";
             }
@@ -158,36 +180,25 @@ function mostrarTodo(){
 
 }
 
-function desvelarCeros(matrizADesvelar, i,j){
-    
-    i= Number(i)
-    j=Number(j)
-    if(matrizADesvelar[i][j]!=0){
-        document.getElementById(i+'-'+j).innerText=matrizADesvelar[i][j]
+function despejarCeros(i, j) {//no funciona
+    if (i < 1 || i > matrizFinal.length-2 || j < 1 || j > matrizFinal[i].length-2) {
+      return;
     }
-    
+    if (matrizFinal[i][j] === 0&&document.getElementById(i+'-'+j).getAttribute('class')!='visitado') {
+        document.getElementById(i+'-'+j).setAttribute('class','visitado')
+        desvelar(i - 1, j);
+        desvelar(i + 1, j);
+        desvelar(i, j - 1);
+        desvelar(i, j + 1);
+        desvelar(i+1,j+1);
+        desvelar(i-1,j+1);
+        desvelar(i-1,j-1);
+        desvelar(i+1,j-1);
+      
+    }
     document.getElementById(i+'-'+j).setAttribute('class','visitado')
-    if(matrizADesvelar[i][j]!='x'){
-        
-            
-        if(matrizADesvelar[i-1][j-1]=='0')desvelarCeros(matrizADesvelar,i-1,j-1)
-        if(matrizADesvelar[i-1][j]=='0') desvelarCeros(matrizADesvelar,i-1,j)
-        if(matrizADesvelar[i-1][j+1]=='0') desvelarCeros(matrizADesvelar,i-1,j+1)
-    
-        if(matrizADesvelar[i][j-1]=='0') desvelarCeros(matrizADesvelar,i,j-1)
-        if(matrizADesvelar[i][j+1]=='0') desvelarCeros(matrizADesvelar,i,j+1)
-
-        if(matrizADesvelar[i+1][j-1]=='0') desvelarCeros(matrizADesvelar,i+1,j-1)
-        if(matrizADesvelar[i+1][j]=='0') desvelarCeros(matrizADesvelar,i+1,j)
-        if(matrizADesvelar[i+1][j+1]=='0') desvelarCeros(matrizADesvelar,i+1,j+1)
-    
-
-
-    }
-    
-
-}
-
+    return
+  }
 
 
 
@@ -203,7 +214,7 @@ function generarBombas(){
     let matrizConBomba= new Array(ancho+2)
     do{
         bombasUser=Number(prompt('Introduca el numero de bombas deseado','15'))
-        }while(bombasUser>ancho*alto)
+        }while(bombasUser>ancho*alto||bombasUser<1)
 
     
         bombasPintadas=0
@@ -324,8 +335,29 @@ function pintar(matrizTest,id){
     document.getElementById(id).innerHTML=salida;
 }
 
-function pintarTiempo(){
-    tiempo++
-    document.getElementById('tiempo').innerText=tiempo
-}
+
+function actualizarContador() {
+    contador++;
+    tiempoTranscurrido.innerText = contador;
+  }
+  
+  // Iniciar el contador
+  function iniciarContador() {
+    tiempoTranscurrido = document.getElementById("tiempo");
+    setInterval(actualizarContador, 1000);
+  }
+  
+  // Reiniciar el contador
+  function reiniciarContador() {
+    clearInterval();
+    contador = 0;
+    tiempoTranscurrido.innerText = contador;
+    iniciarContador();
+  }
+  function pararContador() {
+    clearInterval();
+    contador = 0;
+    tiempoTranscurrido.innerText = contador;
+    
+  }
 
